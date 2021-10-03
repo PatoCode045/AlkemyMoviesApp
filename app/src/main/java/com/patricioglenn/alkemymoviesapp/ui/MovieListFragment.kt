@@ -28,15 +28,15 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list), MovieListAdapt
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentMovieListBinding.bind(view)
 
-        viewmodel.errorMessage.observe(viewLifecycleOwner, Observer{
+        viewmodel.errorMessage.observe(viewLifecycleOwner, {
             binding.tvErrorMovieList.text = it
         })
 
-        viewmodel.requestState.observe(viewLifecycleOwner, Observer { state ->
+        viewmodel.requestState.observe(viewLifecycleOwner, { state ->
             Log.d("state", state)
             when(state){
                 "loading" -> {
-                    binding.rvMovieList.isVisible = false
+                    binding.rvMovieList.isVisible = true
                     binding.pbLoadingMovieList.isVisible = true
                     binding.tvErrorMovieList.isVisible = false
                 }
@@ -49,8 +49,7 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list), MovieListAdapt
             }
         })
 
-        viewmodel.fetchPopularMovies().observe(viewLifecycleOwner, Observer { movies->
-            Log.d("state", "se usa")
+        viewmodel.movies.observe(viewLifecycleOwner, { movies->
             if (movies.isEmpty()){
                 binding.rvMovieList.isVisible = false
                 binding.pbLoadingMovieList.isVisible = false
@@ -65,11 +64,15 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list), MovieListAdapt
         })
     }
 
-    override fun onItemClick(item: Movie) {
-        Log.d("title", item.title)
-        val action = MovieListFragmentDirections.actionMovieListFragmentToMovieFragment(
-            item.id
-        )
-        findNavController().navigate(action)
+    override fun onItemClick(item: Movie?) {
+
+        if (item != null){
+            val action = MovieListFragmentDirections.actionMovieListFragmentToMovieFragment(
+                item.id
+            )
+            findNavController().navigate(action)
+        }else {
+            viewmodel.getPopularMovies()
+        }
     }
 }
