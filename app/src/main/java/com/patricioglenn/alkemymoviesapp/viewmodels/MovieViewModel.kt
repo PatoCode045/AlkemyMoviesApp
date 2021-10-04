@@ -1,9 +1,12 @@
-package com.patricioglenn.alkemymoviesapp.presentation
+package com.patricioglenn.alkemymoviesapp.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.*
-import com.patricioglenn.alkemymoviesapp.data.Rate
-import com.patricioglenn.alkemymoviesapp.domain.MovieRepo
+import com.patricioglenn.alkemymoviesapp.database.MovieDatabase
+import com.patricioglenn.alkemymoviesapp.database.MovieEntity
+import com.patricioglenn.alkemymoviesapp.domain.Movie
+import com.patricioglenn.alkemymoviesapp.domain.Rate
+import com.patricioglenn.alkemymoviesapp.repository.MovieRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -13,8 +16,9 @@ class MovieViewModel (private val repo: MovieRepo): ViewModel(){
     var errorMessage = MutableLiveData<String>()
     var showRateToast = MutableLiveData(false)
 
-    var movieId = 0
+    var movieId = 0L
     var session = ""
+    var movie: MutableLiveData<MovieEntity> = MutableLiveData()
 
     init {
         getSession()
@@ -27,18 +31,20 @@ class MovieViewModel (private val repo: MovieRepo): ViewModel(){
         }
     }
 
-    fun getSelectedMovie(id: Int) = liveData(viewModelScope.coroutineContext + Dispatchers.Main) {
-        movieId = id
-        try {
-            requestState.value = "loading"
-            emit(repo.getSelectedMovie(id))
-        }catch (e: Exception){
-            requestState.value = "error"
+    fun getSelectedMovie(){
+        viewModelScope.launch {
+            try {
+                requestState.value = "loading"
+                movie.value = repo.getSelectedMovie(movieId).value
+            }catch (e: Exception){
+                requestState.value = "error"
+                Log.d("error", e.toString())
 
-            if(e.message == NO_NETWORK){
-                errorMessage.value = "Ha ocurrido un error inesperado, verifique su conexion a internet e intentelo nuevamente."
-            }else{
-                errorMessage.value = "Ha ocurrido un error inesperado, por favor, pongase en contacto con el creador de esta aplicacion."
+                if(e.message == NO_NETWORK){
+                    errorMessage.value = "Ha ocurrido un error inesperado, verifique su conexion a internet e intentelo nuevamente."
+                }else{
+                    errorMessage.value = "Ha ocurrido un error inesperado, por favor, pongase en contacto con el creador de esta aplicacion."
+                }
             }
         }
     }

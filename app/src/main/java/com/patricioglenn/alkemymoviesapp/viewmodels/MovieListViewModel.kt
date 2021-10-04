@@ -1,8 +1,8 @@
-package com.patricioglenn.alkemymoviesapp.presentation
+package com.patricioglenn.alkemymoviesapp.viewmodels
 
 import androidx.lifecycle.*
-import com.patricioglenn.alkemymoviesapp.data.Movie
-import com.patricioglenn.alkemymoviesapp.domain.MovieRepo
+import com.patricioglenn.alkemymoviesapp.domain.Movie
+import com.patricioglenn.alkemymoviesapp.repository.MovieRepo
 import kotlinx.coroutines.launch
 
 

@@ -1,34 +1,30 @@
-package com.patricioglenn.alkemymoviesapp.ui
+package com.patricioglenn.alkemymoviesapp.ui.movie_list
 
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.patricioglenn.alkemymoviesapp.R
-import com.patricioglenn.alkemymoviesapp.data.Movie
+import com.patricioglenn.alkemymoviesapp.database.getDatabase
+import com.patricioglenn.alkemymoviesapp.domain.Movie
 import com.patricioglenn.alkemymoviesapp.databinding.FragmentMovieListBinding
-import com.patricioglenn.alkemymoviesapp.domain.MovieRepoImpl
+import com.patricioglenn.alkemymoviesapp.repository.MovieRepoImpl
 import com.patricioglenn.alkemymoviesapp.network.MovieApi
-import com.patricioglenn.alkemymoviesapp.presentation.MovieListViewModel
-import com.patricioglenn.alkemymoviesapp.presentation.MovieListViewModelFactory
+import com.patricioglenn.alkemymoviesapp.viewmodels.MovieListViewModel
+import com.patricioglenn.alkemymoviesapp.viewmodels.MovieListViewModelFactory
 
 
-class MovieListFragment : Fragment(R.layout.fragment_movie_list), MovieListAdapter.OnItemClickListener{
+class MovieListFragment : Fragment(R.layout.fragment_movie_list),
+    MovieListAdapter.OnItemClickListener {
 
     private lateinit var binding: FragmentMovieListBinding
     private val viewmodel by activityViewModels<MovieListViewModel> {
-        MovieListViewModelFactory(MovieRepoImpl(MovieApi))
+        MovieListViewModelFactory(MovieRepoImpl(MovieApi, getDatabase(requireContext())))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -83,9 +79,7 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list), MovieListAdapt
     override fun onItemClick(item: Movie?) {
 
         if (item != null){
-            val action = MovieListFragmentDirections.actionMovieListFragmentToMovieFragment(
-                item.id
-            )
+            val action = MovieListFragmentDirections.actionMovieListFragmentToMovieFragment(item.id)
             findNavController().navigate(action)
         }else {
             viewmodel.getPopularMovies()

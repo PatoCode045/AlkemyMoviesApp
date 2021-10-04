@@ -1,6 +1,6 @@
-package com.patricioglenn.alkemymoviesapp.utils
+package com.patricioglenn.alkemymoviesapp.util
 
-import com.patricioglenn.alkemymoviesapp.data.Genre
+import com.patricioglenn.alkemymoviesapp.domain.Genre
 
 object MyUtils{
 

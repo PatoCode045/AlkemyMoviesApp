@@ -1,4 +1,6 @@
-package com.patricioglenn.alkemymoviesapp.data
+package com.patricioglenn.alkemymoviesapp.network
+
+import com.patricioglenn.alkemymoviesapp.domain.Movie
 
 data class ApiResult(
     val page: Int = 0,

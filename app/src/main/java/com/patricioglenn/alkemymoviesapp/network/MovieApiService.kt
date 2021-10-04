@@ -1,9 +1,7 @@
 package com.patricioglenn.alkemymoviesapp.network
 
-import com.patricioglenn.alkemymoviesapp.data.ApiResult
-import com.patricioglenn.alkemymoviesapp.data.ApiSesion
-import com.patricioglenn.alkemymoviesapp.data.Movie
-import com.patricioglenn.alkemymoviesapp.data.Rate
+import com.patricioglenn.alkemymoviesapp.domain.Movie
+import com.patricioglenn.alkemymoviesapp.domain.Rate
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
@@ -33,11 +31,11 @@ interface MovieApiService {
     suspend fun getPopularMovies(@Query("page")page:Int): ApiResult
 
     @GET("movie/{movie_id}?api_key=${API_KEY}&language=es-ES")
-    suspend fun getSelectedMovie(@Path("movie_id") id: Int): Movie
+    suspend fun getSelectedMovie(@Path("movie_id") id: Long): Movie
 
     @Headers("Content-Type: application/json;charset=utf-8")
     @POST("movie/{movie_id}/rating?api_key=${API_KEY}")
-    suspend fun rateMovie(@Path("movie_id") movieId: Int, @Body rate: Rate, @Query("guest_session_id")session:String)
+    suspend fun rateMovie(@Path("movie_id") movieId: Long, @Body rate: Rate, @Query("guest_session_id")session:String)
 
 }
 

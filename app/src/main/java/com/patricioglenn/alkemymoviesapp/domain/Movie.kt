@@ -1,9 +1,8 @@
-package com.patricioglenn.alkemymoviesapp.data
+package com.patricioglenn.alkemymoviesapp.domain
 
 data class Movie(
-    val id: Int = 0,
+    val id: Long = 0,
     val title: String = "",
-    val original_title: String = "",
     val overview: String = "",
     val release_date: String = "",
     val genres: List<Genre> = listOf(),

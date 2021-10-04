@@ -1,4 +1,4 @@
-package com.patricioglenn.alkemymoviesapp.data
+package com.patricioglenn.alkemymoviesapp.network
 
 data class ApiSesion(
     val success: Boolean,

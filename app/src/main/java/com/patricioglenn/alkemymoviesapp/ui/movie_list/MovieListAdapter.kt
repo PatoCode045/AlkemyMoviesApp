@@ -1,13 +1,12 @@
-package com.patricioglenn.alkemymoviesapp.ui
+package com.patricioglenn.alkemymoviesapp.ui.movie_list
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.patricioglenn.alkemymoviesapp.data.Movie
+import com.patricioglenn.alkemymoviesapp.domain.Movie
 import com.patricioglenn.alkemymoviesapp.databinding.ViewholderMovieListItemBinding
 import com.patricioglenn.alkemymoviesapp.databinding.ViewholderMovieListLoadMoreItemsBinding
 
