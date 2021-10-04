@@ -1,10 +1,11 @@
 package com.patricioglenn.alkemymoviesapp.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
@@ -22,7 +23,7 @@ import com.patricioglenn.alkemymoviesapp.utils.MyUtils.formatLanguage
 class MovieFragment : Fragment(R.layout.fragment_movie) {
 
     lateinit var binding: FragmentMovieBinding
-    private val viewmodel by viewModels<MovieViewModel> {
+    private val viewmodel by activityViewModels<MovieViewModel> {
         MovieViewModelFactory(MovieRepoImpl(MovieApi))
     }
     private val args by navArgs<MovieFragmentArgs>()
@@ -67,6 +68,19 @@ class MovieFragment : Fragment(R.layout.fragment_movie) {
             binding.tvReleaseDate.text = "Lanzada: ${formatDate(movie.release_date)}"
             binding.tvRating.text = movie.vote_average.toString()
             binding.tvOverview.text = "Sinopsis: ${movie.overview}"
+        })
+
+        binding.ivRate.setOnClickListener {
+            val dialog = RateMovieDialogFragment()
+            dialog.show(parentFragmentManager, "tag")
+
+        }
+
+        viewmodel.showRateToast.observe(viewLifecycleOwner, {
+            if (it){
+                Toast.makeText(requireContext(), "El puntaje de guardo correctamente.", Toast.LENGTH_LONG).show()
+                viewmodel.showRateToast.value = false
+            }
         })
 
     }
