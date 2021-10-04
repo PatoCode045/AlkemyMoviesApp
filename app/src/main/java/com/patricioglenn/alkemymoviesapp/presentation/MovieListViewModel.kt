@@ -1,10 +1,8 @@
 package com.patricioglenn.alkemymoviesapp.presentation
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.patricioglenn.alkemymoviesapp.data.Movie
 import com.patricioglenn.alkemymoviesapp.domain.MovieRepo
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
@@ -15,6 +13,7 @@ class MovieListViewModel (private val repo: MovieRepo): ViewModel(){
     var requestState = MutableLiveData<String>()
     var errorMessage = MutableLiveData<String>()
     var movies: MutableLiveData<MutableList<Movie>> = MutableLiveData()
+    var filteredMovieList: MutableLiveData<MutableList<Movie>> = MutableLiveData()
     var page = 1
 
     init {
@@ -29,6 +28,7 @@ class MovieListViewModel (private val repo: MovieRepo): ViewModel(){
                 movies.value?.let { newList = movies.value!! }
                 newList.addAll(repo.getPopularMovies(page))
                 movies.value = newList
+                filteredMovieList.value = newList
                 page++
             }catch (e: Exception){
                 requestState.value = "error"
@@ -39,6 +39,22 @@ class MovieListViewModel (private val repo: MovieRepo): ViewModel(){
                     errorMessage.value = "Ha ocurrido un error inesperado, por favor, pongase en contacto con el creador de esta aplicacion."
                 }
             }
+        }
+    }
+
+    fun searchMovie(text: String){
+        if (text.trim().isNotBlank()){
+            var filteredMovies: MutableList<Movie> = mutableListOf()
+            if (text.trim().isNotBlank()){
+                movies.value?.forEach {
+                    if (it.title.lowercase().contains(text.lowercase())){
+                        filteredMovies.add(it)
+                    }
+                }
+            }
+            filteredMovieList.value = filteredMovies
+        }else{
+            filteredMovieList.value = movies.value
         }
     }
 }
